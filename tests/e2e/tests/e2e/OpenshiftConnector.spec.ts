@@ -12,6 +12,7 @@ import { test } from 'mocha';
 import { e2eContainer } from '../../inversify.config';
 import { CLASSES, TYPES } from '../../inversify.types';
 import { Ide } from '../../pageobjects/ide/Ide';
+import { Dashboard } from '../../pageobjects/dashboard/Dashboard';
 import { ICheLoginPage } from '../../pageobjects/login/ICheLoginPage';
 import { TestConstants } from '../../TestConstants';
 import { DriverHelper } from '../../utils/DriverHelper';
@@ -23,6 +24,7 @@ const ide: Ide = e2eContainer.get(CLASSES.Ide);
 const loginPage: ICheLoginPage = e2eContainer.get<ICheLoginPage>(TYPES.CheLogin);
 const testWorkspaceUtils: TestWorkspaceUtil = e2eContainer.get<TestWorkspaceUtil>(TYPES.WorkspaceUtil);
 const openshiftPlugin: OpenshiftPlugin = e2eContainer.get(CLASSES.OpenshiftPlugin);
+const dashBoard: Dashboard = e2eContainer.get(CLASSES.Dashboard);
 const namespace: string = TestConstants.TS_SELENIUM_USERNAME;
 suite('Openshift connector user story', async () => {
     const workspacePrefixUrl: string = `${TestConstants.TS_SELENIUM_BASE_URL}/dashboard/#/ide/${TestConstants.TS_SELENIUM_USERNAME}/`;
@@ -37,17 +39,19 @@ suite('Openshift connector user story', async () => {
             }
         ];
 
-        //await testWorkspaceUtils.createWsFromDevFile(wsConfig);
+        await testWorkspaceUtils.createWsFromDevFile(wsConfig);
     });
 
     test('Login into workspace and open tree container', async () => {
+        const loginIntoClusterMessage: string = 'You are already logged in the cluster. Do you want to login to a different cluster?';
         await driverHelper.navigateToUrl(workspacePrefixUrl + wsName);
         await loginPage.login();
         await ide.waitWorkspaceAndIde(namespace, wsName);
-        await driverHelper.wait(5000);
+        await dashBoard.waitDisappearanceNavigationMenu();
         await openshiftPlugin.clickOnOpenshiftToollBarIcon();
         await openshiftPlugin.clickOnApplicationToolbarItem(OpenshiftAppExplorerToolbar.LogIntoCluster);
-        await driverHelper.wait(5000);
+        await ide.clickOnNotificationButton(loginIntoClusterMessage,'Yes');
+        
     });
 
 });
