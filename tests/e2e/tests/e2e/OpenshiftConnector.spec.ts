@@ -18,6 +18,8 @@ import { TestConstants } from '../../TestConstants';
 import { DriverHelper } from '../../utils/DriverHelper';
 import { TestWorkspaceUtil } from '../../utils/workspace/TestWorkspaceUtil';
 import { OpenshiftPlugin, OpenshiftAppExplorerToolbar } from '../../pageobjects/ide/OpenshiftPlugin';
+import { QuickOpenContainer } from '../../pageobjects/ide/QuickOpenContainer';
+
 
 const driverHelper: DriverHelper = e2eContainer.get(CLASSES.DriverHelper);
 const ide: Ide = e2eContainer.get(CLASSES.Ide);
@@ -26,6 +28,8 @@ const testWorkspaceUtils: TestWorkspaceUtil = e2eContainer.get<TestWorkspaceUtil
 const openshiftPlugin: OpenshiftPlugin = e2eContainer.get(CLASSES.OpenshiftPlugin);
 const dashBoard: Dashboard = e2eContainer.get(CLASSES.Dashboard);
 const namespace: string = TestConstants.TS_SELENIUM_USERNAME;
+const quickOpenContainer: QuickOpenContainer = e2eContainer.get(CLASSES.QuickOpenContainer);
+
 suite('Openshift connector user story', async () => {
     const workspacePrefixUrl: string = `${TestConstants.TS_SELENIUM_BASE_URL}/dashboard/#/ide/${TestConstants.TS_SELENIUM_USERNAME}/`;
     let wsName: string;
@@ -51,7 +55,10 @@ suite('Openshift connector user story', async () => {
         await openshiftPlugin.clickOnOpenshiftToollBarIcon();
         await openshiftPlugin.clickOnApplicationToolbarItem(OpenshiftAppExplorerToolbar.LogIntoCluster);
         await ide.clickOnNotificationButton(loginIntoClusterMessage,'Yes');
-        
+        await quickOpenContainer.clickOnContainerItem('Credentials');
+        await quickOpenContainer.clickOnContainerItem('https://');
+        await quickOpenContainer.clickOnContainerItem('$(plus) Add new user...');
+
     });
 
 });

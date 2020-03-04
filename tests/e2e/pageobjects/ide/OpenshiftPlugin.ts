@@ -51,4 +51,10 @@ export class OpenshiftPlugin {
         Logger.debug(`OpenshiftPlugin.waitOpenshiftConnectorTree`);
         await this.driverHelper.waitAndClick(By.css(`div [title='${item}']`), timeout);
     }
+
+    async getCluster(item: OpenshiftAppExplorerToolbar, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
+        Logger.debug(`OpenshiftPlugin.waitOpenshiftConnectorTree`);
+        await this.driverHelper.waitAndClick(By.id('openshiftProjectExplorer'), timeout);
+    }
 }
+
