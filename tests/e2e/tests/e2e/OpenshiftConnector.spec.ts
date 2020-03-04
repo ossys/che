@@ -19,7 +19,7 @@ import { DriverHelper } from '../../utils/DriverHelper';
 import { TestWorkspaceUtil } from '../../utils/workspace/TestWorkspaceUtil';
 import { OpenshiftPlugin, OpenshiftAppExplorerToolbar } from '../../pageobjects/ide/OpenshiftPlugin';
 import { QuickOpenContainer } from '../../pageobjects/ide/QuickOpenContainer';
-
+import { ProjectTree } from '../../pageobjects/ide/ProjectTree';
 
 const driverHelper: DriverHelper = e2eContainer.get(CLASSES.DriverHelper);
 const ide: Ide = e2eContainer.get(CLASSES.Ide);
@@ -29,6 +29,7 @@ const openshiftPlugin: OpenshiftPlugin = e2eContainer.get(CLASSES.OpenshiftPlugi
 const dashBoard: Dashboard = e2eContainer.get(CLASSES.Dashboard);
 const namespace: string = TestConstants.TS_SELENIUM_USERNAME;
 const quickOpenContainer: QuickOpenContainer = e2eContainer.get(CLASSES.QuickOpenContainer);
+const projectTree: ProjectTree = e2eContainer.get(CLASSES.ProjectTree);
 
 suite('Openshift connector user story', async () => {
     const workspacePrefixUrl: string = `${TestConstants.TS_SELENIUM_BASE_URL}/dashboard/#/ide/${TestConstants.TS_SELENIUM_USERNAME}/`;
@@ -47,18 +48,22 @@ suite('Openshift connector user story', async () => {
     });
 
     test('Login into workspace and open tree container', async () => {
+        const provideAuthenticationSuffix: string = 'for basic authentication to the API server (Press \'Enter\' to confirm your input or \'Escape\' to cancel)'
         const loginIntoClusterMessage: string = 'You are already logged in the cluster. Do you want to login to a different cluster?';
         await driverHelper.navigateToUrl(workspacePrefixUrl + wsName);
         await loginPage.login();
         await ide.waitWorkspaceAndIde(namespace, wsName);
         await dashBoard.waitDisappearanceNavigationMenu();
         await openshiftPlugin.clickOnOpenshiftToollBarIcon();
+        const openshiftIP: string = await openshiftPlugin.getClusterIP();
         await openshiftPlugin.clickOnApplicationToolbarItem(OpenshiftAppExplorerToolbar.LogIntoCluster);
-        await ide.clickOnNotificationButton(loginIntoClusterMessage,'Yes');
+        await ide.clickOnNotificationButton(loginIntoClusterMessage, 'Yes');
         await quickOpenContainer.clickOnContainerItem('Credentials');
-        await quickOpenContainer.clickOnContainerItem('https://');
+        await quickOpenContainer.clickOnContainerItem(`https://${openshiftIP}`);
         await quickOpenContainer.clickOnContainerItem('$(plus) Add new user...');
-
+        await quickOpenContainer.typeAndSelectSuggestion('developer', `Provide Username ${provideAuthenticationSuffix}`);
+        await quickOpenContainer.typeAndSelectSuggestion('123', `Provide Password ${provideAuthenticationSuffix}`);
+        await projectTree.clickOnItem('')
     });
 
 });

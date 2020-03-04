@@ -16,7 +16,7 @@ import { Logger } from '../../utils/Logger';
 import { By } from 'selenium-webdriver';
 
 export enum OpenshiftAppExplorerToolbar {
-    ReportExtensionIssueOnGitHub= 'Report Extension Issue on GitHub',
+    ReportExtensionIssueOnGitHub = 'Report Extension Issue on GitHub',
     RefreshView = 'Refresh View',
     SwitchContexts = 'Switch Contexts',
     LogIntoCluster = 'Log in to cluster'
@@ -27,7 +27,7 @@ export class OpenshiftPlugin {
 
 
     constructor(@inject(CLASSES.DriverHelper) private readonly driverHelper: DriverHelper,
-                @inject(CLASSES.Ide) private readonly ide: Ide,
+        @inject(CLASSES.Ide) private readonly ide: Ide,
     ) {
     }
 
@@ -52,9 +52,9 @@ export class OpenshiftPlugin {
         await this.driverHelper.waitAndClick(By.css(`div [title='${item}']`), timeout);
     }
 
-    async getCluster(item: OpenshiftAppExplorerToolbar, timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT) {
+    async getClusterIP(timeout: number = TestConstants.TS_SELENIUM_DEFAULT_TIMEOUT): Promise<string> {
         Logger.debug(`OpenshiftPlugin.waitOpenshiftConnectorTree`);
-        await this.driverHelper.waitAndClick(By.id('openshiftProjectExplorer'), timeout);
+        return await this.driverHelper.waitAndGetText(By.xpath('//div[@id=\'openshiftProjectExplorer\']//div[@title [contains(text(), https)]]'), timeout);
     }
 }
 
