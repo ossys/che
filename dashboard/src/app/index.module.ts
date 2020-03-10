@@ -82,12 +82,12 @@ function keycloakLoad(keycloakSettings: any) {
     script.addEventListener('load', resolve);
     script.addEventListener('error', () => {
       return cheBranding.ready.then(() => {
-        reject(`<div  class="error-header"><span>Certificate Error</span><a href="/"><i class="fa fa-times"></i></a></div>
- <div class="error-body"><p>Your Che host may be signed with a self-signed certificate. To resolve this issue, try these possible solutions:</p>
- <p>1.) Import CA certificate info into your browser. You can find instructions on how to do this in you 
+        reject(`<div class="header"><i class="fa fa-warning"></i><p>Certificate Error</p></div>
+ <div class="body"><p>Your Eclipse Che host may be signed with a self-signed certificate. To resolve this issue, try this possible solution:</p>
+ <p>Import CA certificate into your browser. You can find instructions on how to do this in you
  <a href="${cheBranding.getDocs().certificate}" target="_blank">Che documentation</a>.</p>
- <p>2.) Open <a href="${script.src}" target="_blank">the link for your Che host</a> in a new tab and add an exclusion.</p>
- <br/>After trying each of these solutions, <a href="/">refresh your Dashboard</a> to see if the problem has been resolved.</div>`);
+ <p>After trying this solution, refresh your Dashboard to see if the problem has been resolved.</p></div>
+ <div class="footer"><a href="/">Refresh Now</a></div>`);
       });
     });
     script.addEventListener('abort', () => reject('Script loading aborted.'));
@@ -150,7 +150,9 @@ function getApis(keycloak: any): Promise<void> {
 function showErrorMessage(errorMessage: string) {
   const div = document.createElement('div');
   div.className = 'keycloak-error';
-  div.innerHTML = errorMessage;
+  const messageArea = document.createElement('div');
+  div.appendChild(messageArea);
+  messageArea.innerHTML = errorMessage;
   document.querySelector('.main-page-loader').appendChild(div);
 }
 
@@ -210,7 +212,7 @@ angular.element(document).ready(() => {
   }).catch((error: string) => {
     console.error(`Can't GET "/api". ${error ? 'Error: ' : ''}`, error);
     if (!hasCertificateError) {
-      error = `${error}<div class="error-body">Click <a href="/">here</a> to reload page.</div>`
+      error = `${error}<div>Click <a href="/">here</a> to reload page.</div>`
     }
     showErrorMessage(error);
   });
