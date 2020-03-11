@@ -269,10 +269,25 @@ md-tabs-wrapper
   font-size 12px
   border-radius 2px
 
+.keycloak-error-backdrop
+  background-color $black-color
+  position absolute
+  top 0
+  left 0
+  right 0
+  bottom 0
+  text-align center
+
+  .footer-logo
+    position absolute
+    bottom 15px
+    width 100px
+    margin-left -50px
+
 .keycloak-error
   background-color $white-color
   color $error-color
-  padding 50px 0 80px 0
+  padding 50px 0
   text-align center
   font-weight 600
   font-size 16px
@@ -296,8 +311,7 @@ md-tabs-wrapper
 
   .header,
   .body,
-  .footer
-    display inline-block
+  display inline-block
     color $black-color
     text-align left
     width 100%
@@ -310,6 +324,5 @@ md-tabs-wrapper
     color #e7ad3b
     margin 0 12px 0 4px
 
-  .body,
-  .footer
+  .body
     font-size 16px

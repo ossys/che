@@ -83,11 +83,12 @@ function keycloakLoad(keycloakSettings: any) {
     script.addEventListener('error', () => {
       return cheBranding.ready.then(() => {
         reject(`<div class="header"><i class="fa fa-warning"></i><p>Certificate Error</p></div>
- <div class="body"><p>Your Eclipse Che host may be signed with a self-signed certificate. To resolve this issue, try this possible solution:</p>
+ <div class="body"><p>Your ${cheBranding.getProductName()} host may be signed with a self-signed certificate.
+   To resolve this issue, try this possible solution:</p>
  <p>Import CA certificate into your browser. You can find instructions on how to do this in you
- <a href="${cheBranding.getDocs().certificate}" target="_blank">Che documentation</a>.</p>
- <p>After trying this solution, refresh your Dashboard to see if the problem has been resolved.</p></div>
- <div class="footer"><a href="/">Refresh Now</a></div>`);
+ <a href="${cheBranding.getDocs().certificate}" target="_blank">Che documentation</a>.</p><p>After trying this solution,
+   refresh your Dashboard to see if the problem has been resolved.</p><p><a href="/">Refresh Now</a></p>
+ </div>`);
       });
     });
     script.addEventListener('abort', () => reject('Script loading aborted.'));
@@ -147,13 +148,22 @@ function getApis(keycloak: any): Promise<void> {
     });
   });
 }
-function showErrorMessage(errorMessage: string) {
-  const div = document.createElement('div');
-  div.className = 'keycloak-error';
-  const messageArea = document.createElement('div');
-  div.appendChild(messageArea);
-  messageArea.innerHTML = errorMessage;
-  document.querySelector('.main-page-loader').appendChild(div);
+function showErrorMessage(message: string) {
+  cheBranding.ready.then(() => {
+    const backdrop = document.createElement('div');
+    backdrop.className = 'keycloak-error-backdrop';
+    const messageArea = document.createElement('div');
+    messageArea.className = 'keycloak-error';
+    const footerLogo = document.createElement('img');
+    footerLogo.src = cheBranding.getProductLogo();
+    footerLogo.className="footer-logo";
+    backdrop.appendChild(messageArea);
+    backdrop.appendChild(footerLogo);
+    const errorMessage = document.createElement('div');
+    messageArea.appendChild(errorMessage);
+    errorMessage.innerHTML = message;
+    document.querySelector('.main-page-loader').appendChild(backdrop);
+  });
 }
 
 const keycloakAuth = {
