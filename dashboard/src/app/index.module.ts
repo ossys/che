@@ -83,12 +83,11 @@ function keycloakLoad(keycloakSettings: any) {
     script.addEventListener('error', () => {
       return cheBranding.ready.then(() => {
         reject(`<div class="header"><i class="fa fa-warning"></i><p>Certificate Error</p></div>
- <div class="body"><p>Your ${cheBranding.getProductName()} host may be signed with a self-signed certificate.
-   To resolve this issue, try this possible solution:</p>
- <p>Import CA certificate into your browser. You can find instructions on how to do this in you
- <a href="${cheBranding.getDocs().certificate}" target="_blank">Che documentation</a>.</p><p>After trying this solution,
-   refresh your Dashboard to see if the problem has been resolved.</p><p><a href="/">Refresh Now</a></p>
- </div>`);
+   <div class="body"><p>Your ${cheBranding.getProductName()} server may be using a self-signed certificate.
+     To resolve this issue, try to import the servers CA certificate into your browser, as described
+   <a href="${cheBranding.getDocs().certificate}" target="_blank">here</a>.</p>
+   <p>After importing the certificate, refresh your browser.</p>
+   <p><a href="/">Refresh Now</a></p></div>`);
       });
     });
     script.addEventListener('abort', () => reject('Script loading aborted.'));
